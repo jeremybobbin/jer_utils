@@ -14,6 +14,7 @@ fn _dimensional_array<'a>(output: &'a mut String, n: u64, _type: &'a str, width:
 pub fn dimensional_array<'a>(n: u64, _type: &'a str, width: u64) -> String {
     let mut output = String::new();
     _dimensional_array(&mut output, n, _type, width);
+    output.pop();
     output
 }
 
@@ -21,8 +22,8 @@ pub fn dimensional_array<'a>(n: u64, _type: &'a str, width: u64) -> String {
 mod tests {
     #[test]
     fn dimensional_array_works() {
-        super::dimensional_array(10, "Option<u32>", 20);
-        let blah: Option<u32> = None;
-        assert_eq!(2 + 2, 4);
+        let result = super::dimensional_array(10, "Option<u32>", 20);
+        let expected = "[[[[[[[[[[Option<u32>; 20]; 20]; 20]; 20]; 20]; 20]; 20]; 20]; 20]; 20];";
+        assert_eq!(result, expected);
     }
 }
