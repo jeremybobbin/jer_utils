@@ -1,3 +1,5 @@
+pub mod reader;
+
 fn _dimensional_array<'a>(output: &'a mut String, n: u64, _type: &'a str, width: u64) {
     if n > 0 {
         output.push_str("[");
