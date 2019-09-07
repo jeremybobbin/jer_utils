@@ -22,9 +22,8 @@ pub fn listen_and_serve<A, R>(address: A, mut reader: R) -> io::Result<()>
 
     for stream in listener.incoming() {
         io::copy(&mut reader, &mut stream?)?;
+        reader.seek(SeekFrom::Start(0))?;
     }
-
-    reader.seek(SeekFrom::Start(0))?;
 
     Ok(())
 }
