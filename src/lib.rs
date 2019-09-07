@@ -1,14 +1,32 @@
 pub mod reader;
 
-fn _dimensional_array<'a>(output: &'a mut String, n: u64, _type: &'a str, width: u64) {
-    if n > 0 {
-        output.push_str("[");
-        _dimensional_array(output, n - 1, _type, width);
-        output.push_str(&format!("{}]; ", width));
-    } else {
-        output.push_str(_type);
-        output.push_str("; ");
+use std::{
+    io::{
+        self,
+        Seek,
+        SeekFrom,
+        Read
+    },
+    net::{
+        ToSocketAddrs,
+        TcpListener,
+    },
+};
+
+
+pub fn listen_and_serve<A, R>(address: A, mut reader: R) -> io::Result<()>
+    where A: ToSocketAddrs,
+          R: Read + Seek,
+{
+    let listener = TcpListener::bind(address)?;
+
+    for stream in listener.incoming() {
+        io::copy(&mut reader, &mut stream?)?;
     }
+
+    reader.seek(SeekFrom::Start(0))?;
+
+    Ok(())
 }
 
 // Function to help visualize multidimensional arrays.
@@ -18,6 +36,17 @@ pub fn dimensional_array<'a>(n: u64, _type: &'a str, width: u64) -> String {
     _dimensional_array(&mut output, n, _type, width);
     output.pop();
     output
+}
+
+fn _dimensional_array<'a>(output: &'a mut String, n: u64, _type: &'a str, width: u64) {
+    if n > 0 {
+        output.push_str("[");
+        _dimensional_array(output, n - 1, _type, width);
+        output.push_str(&format!("{}]; ", width));
+    } else {
+        output.push_str(_type);
+        output.push_str("; ");
+    }
 }
 
 #[cfg(test)]
